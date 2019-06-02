@@ -130,6 +130,7 @@
     <Compile Include="AntiDebugProtection.cs" />
     <Compile Include="FakeAttributes.cs" />
     <Compile Include="FakeNative.cs" />
+    <Compile Include="AntiDnSpyProtection.cs" />
     <Compile Include="IMildReferenceProxyService.cs" />
     <Compile Include="InvalidMetadataProtection.cs" />
     <Compile Include="MildReferenceProxy\EncodingType.cs" />
