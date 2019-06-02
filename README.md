@@ -1,7 +1,7 @@
 ![](https://i.imgur.com/8RIdJOg.png)
 
 
-ConfuserEx | Beds Protector
+ConfuserEx | EnternalDeath Protector
 ========
 Added Features (Mods)
 --------
