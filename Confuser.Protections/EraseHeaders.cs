@@ -36,7 +36,7 @@ namespace Confuser.Protections
             // Token: 0x060001E5 RID: 485 RVA: 0x00011C74 File Offset: 0x0000FE74
             get
             {
-                return "This protection flood the module.cctor.";
+                return "Eternaldeath erease headers";
             }
         }
 
