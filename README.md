@@ -1,4 +1,4 @@
-![](https://i.imgur.com/8RIdJOg.png)
+![](https://i.imgur.com/LERALXJ.png)
 
 
 ConfuserEx | Beds Protector
