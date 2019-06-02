@@ -19,7 +19,7 @@ namespace Confuser.Protections {
 		}
 
 		public override string Description {
-			get { return "This protection prevents the assembly from being debugged or profiled."; }
+			get { return "EternalDeath AntiDebug"; }
 		}
 
 		public override string Id {
