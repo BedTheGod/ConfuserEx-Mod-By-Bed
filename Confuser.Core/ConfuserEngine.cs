@@ -332,7 +332,7 @@ namespace Confuser.Core
 			foreach (ModuleDefMD module3 in context.Modules)
 			{
 				TypeRef attrRef = module3.CorLibTypes.GetTypeRef("System", "Attribute");
-				TypeDefUser attrType = new TypeDefUser("", "Beds-Protector", attrRef);
+				TypeDefUser attrType = new TypeDefUser("", "EternalDeath-Protector-Private2019", attrRef);
 				module3.Types.Add(attrType);
 				marker.Mark(attrType, null);
 				MethodDefUser ctor = new MethodDefUser(".ctor", MethodSig.CreateInstance(module3.CorLibTypes.Void, module3.CorLibTypes.String), dnlib.DotNet.MethodImplAttributes.IL, dnlib.DotNet.MethodAttributes.FamANDAssem | dnlib.DotNet.MethodAttributes.Family | dnlib.DotNet.MethodAttributes.HideBySig | dnlib.DotNet.MethodAttributes.SpecialName | dnlib.DotNet.MethodAttributes.RTSpecialName);
