@@ -107,7 +107,7 @@ namespace Confuser.Protections
             {
                 foreach (ModuleDefMD module in parameters.Targets.OfType<ModuleDef>())
                 {
-                    module.Name = "вє∂ѕ ρяσтє¢тσя - " + cheekycunt.Next(100000, 1000000000).ToString() + cheekycunt.Next(100000, 1000000000).ToString() + cheekycunt.Next(100000, 1000000000).ToString();
+                    module.Name = "EternalDeath-Protector-Private2019 - " + cheekycunt.Next(100000, 1000000000).ToString() + cheekycunt.Next(100000, 1000000000).ToString() + cheekycunt.Next(100000, 1000000000).ToString();
                     module.Assembly.Name = "вє∂ѕ ρяσтє¢тσя - " + cheekycunt.Next(100000, 1000000000).ToString() + cheekycunt.Next(100000, 1000000000).ToString() + cheekycunt.Next(100000, 1000000000).ToString();
                     
                 }
