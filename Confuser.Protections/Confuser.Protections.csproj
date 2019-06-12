@@ -52,6 +52,7 @@
     </Compile>
     <Compile Include="HideMethods.cs" />
     <Compile Include="EraseHeaders.cs" />
+    <Compile Include="AntiDe4dot.cs" />
     <Compile Include="LocaltoFieldProtection.cs" />
     <Compile Include="AntiMemoryEditing\MemoryEditAnalyzePhase.cs" />
     <Compile Include="AntiMemoryEditing\MemoryEditApplyPhase.cs" />
