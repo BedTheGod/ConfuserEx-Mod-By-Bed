@@ -53,6 +53,11 @@
     <Compile Include="HideMethods.cs" />
     <Compile Include="EraseHeaders.cs" />
     <Compile Include="LocaltoFieldProtection.cs" />
+    <Compile Include="AntiMemoryEditing\MemoryEditAnalyzePhase.cs" />
+    <Compile Include="AntiMemoryEditing\MemoryEditApplyPhase.cs" />
+    <Compile Include="AntiMemoryEditing\MemoryEditInjectPhase.cs" />
+    <Compile Include="AntiMemoryEditing\MemoryEditProtection.cs" />
+    <Compile Include="AntiMemoryEditing\MemoryEditService.cs" />
     <Compile Include="AntiTamper\AntiTamperProtection.cs" />
     <Compile Include="AntiTamper\DynamicDeriver.cs" />
     <Compile Include="AntiTamper\IKeyDeriver.cs" />
