@@ -51,6 +51,7 @@
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="HideMethods.cs" />
+    <Compile Include="RickRollProtection.cs" />
     <Compile Include="EraseHeaders.cs" />
     <Compile Include="LocaltoFieldProtection.cs" />
     <Compile Include="AntiTamper\AntiTamperProtection.cs" />
