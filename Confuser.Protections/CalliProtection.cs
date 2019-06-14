@@ -1,155 +1,126 @@
-﻿
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Confuser.Core;
 using Confuser.Core.Helpers;
 using Confuser.Core.Services;
 using Confuser.Renamer;
 using dnlib.DotNet;
 using dnlib.DotNet.Emit;
-using System.IO;
 using dnlib.DotNet.Writer;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace Confuser.Protections
-{
-    [BeforeProtection( "Ki.Constants"/*, "Ki.AntiDebug"*//*,"Ki.AntiDump"*/)]
-    internal class CalliProtection : Protection
-    {
-        public const string _Id = "Calli Protection";
-        public const string _FullId = "Ki.Calli";
+namespace Confuser.Protections {
+	[BeforeProtection("Ki.Constants", "Ki.AntiDebug", "Ki.AntiDump")]
+	public class CalliProtection : Protection {
+		public override ProtectionPreset Preset => ProtectionPreset.Maximum;
 
-        public override string Name
-        {
-            get { return "Calli Protection"; }
-        }
+		public override string Name => "Calli Protection";
 
-        public override string Description
-        {
-            get { return "This protection will convert calls to calli"; }
-        }
+		public override string Description => "Replaces Calls with Calli";
 
-        public override string Id
-        {
-            get { return _Id; }
-        }
+		public override string Author => "ElektroKill";
 
-        public override string FullId
-        {
-            get { return _FullId; }
-        }
+		public override string Id => "calli";
 
-        public override ProtectionPreset Preset
-        {
-            get { return ProtectionPreset.Minimum; }
-        }
+		public override string FullId => "ElektroKill.Calli";
 
-        protected override void Initialize(ConfuserContext context)
-        {
-            //
-        }
+		protected override void Initialize(ConfuserContext context) { }
 
-        protected override void PopulatePipeline(ProtectionPipeline pipeline)
-        {
-            pipeline.InsertPreStage(PipelineStage.ProcessModule, new CalliPhase(this));
-        }
-        #region
-     
-        class CalliPhase : ProtectionPhase
-        {
-            public CalliPhase(CalliProtection parent)
-                : base(parent) { }
+		protected override void PopulatePipeline(ProtectionPipeline pipeline) {
+			pipeline.InsertPreStage(PipelineStage.ProcessModule, new InjectPhase(this));
+			pipeline.InsertPreStage(PipelineStage.ProcessModule, new CalliPhase(this));
+		}
 
-            public override ProtectionTargets Targets
-            {
-                get { return ProtectionTargets.Modules; }
-            }
+		private static MethodDef calliMethod;
+		private static CalliMode mode;
 
-            public override string Name
-            {
-                get { return "Call to Calli conversion"; }
-            }
-           
-            protected override void Execute(ConfuserContext context, ProtectionParameters parameters)
-            {
-               
-                foreach (ModuleDef module in parameters.Targets.OfType<ModuleDef>())
-                {
-                   
-   foreach (TypeDef type in module.Types.ToArray())
-                    {
+		private class InjectPhase : ProtectionPhase {
+			public InjectPhase(CalliProtection parent) : base(parent) { }
 
-   foreach (MethodDef method in type.Methods.ToArray())
-                        {
-                           
-                      
-                           
-                                if (method.HasBody)
-                                {
-                                    if (method.Body.HasInstructions)
-                                    {
-                                    if (method.FullName.Contains("My.")) continue;
-                                    if (method.FullName.Contains(".My")) continue;
-                                    if (method.FullName.Contains("Costura")) continue;
-                                    if (method.IsConstructor) continue;
-                                    if (method.DeclaringType.IsGlobalModuleType) continue;
-                                    for (int i = 0; i < method.Body.Instructions.Count - 1; i++)
-                                        {
-                                            try
-                                            {
+			public override ProtectionTargets Targets => ProtectionTargets.Modules;
 
-                                            if (method.Body.Instructions[i].ToString().Contains("ISupportInitialize")) continue;
-                                            if (method.Body.Instructions[i].OpCode == OpCodes.Call || method.Body.Instructions[i].OpCode == OpCodes.Callvirt/* || method.Body.Instructions[i].OpCode == OpCodes.Ldloc_S*/)
-                                                {
-                                                
-                                                   
-                                                        
-                                                            try
-                                                        {
+			public override string Name => "Calli Helper Injection";
 
-                                                            MemberRef membertocalli = (MemberRef)method.Body.Instructions[i].Operand;
-                                                         
-                                                            
-                                                                    method.Body.Instructions[i].OpCode = OpCodes.Calli;
-                                                                    method.Body.Instructions[i].Operand = membertocalli.MethodSig;
-                                                                    method.Body.Instructions.Insert(i, Instruction.Create(OpCodes.Ldftn, membertocalli));
-                                                                
-                                                        }
-                                                        catch (Exception ex)
-                                                        {
-                                                            string str = ex.Message;
-                                                        }
-                                                    
-                                                }
-                                            }
-                                            catch
-                                            {
+			protected override void Execute(ConfuserContext context, ProtectionParameters parameters) {
+				var rt = context.Registry.GetService<IRuntimeService>();
+				var marker = context.Registry.GetService<IMarkerService>();
+				var name = context.Registry.GetService<INameService>();
 
-                                            }
+				foreach (ModuleDef module in parameters.Targets.OfType<ModuleDef>()) {
+					mode = parameters.GetParameter(context, module, "mode", CalliMode.Normal);
+					if (mode == CalliMode.Normal) {
+						TypeDef typeDef = rt.GetRuntimeType("Confuser.Runtime.Calli");
+						IEnumerable<IDnlibDef> members = InjectHelper.Inject(typeDef, module.GlobalType, module);
+						calliMethod = (MethodDef)members.Single(method => method.Name == "ResolveToken");
+						foreach (IDnlibDef member in members)
+							name.MarkHelper(member, marker, (Protection)Parent);
+						context.CurrentModuleWriterOptions.MetadataOptions.Flags |= MetadataFlags.PreserveAllMethodRids;
+					}
+				}
+			}
+		}
 
-                                        }
-                                    }
-                                    else
-                                    {
+		private class CalliPhase : ProtectionPhase {
+			public CalliPhase(CalliProtection parent) : base(parent) { }
 
-                                    }
-                                }
+			public override ProtectionTargets Targets => ProtectionTargets.Types;
 
-                            
-                        }
-                        foreach (MethodDef md in module.GlobalType.Methods)
-                        {
-                            if (md.Name == ".ctor")
-                            {
-                                module.GlobalType.Remove(md);
-                                break;
-                            }
-                           
-                        }
-                    }
-                }
-            }
-        }
-        #endregion
-    }
+			public override string Name => "Call to Calli Replacer";
+
+			protected override void Execute(ConfuserContext context, ProtectionParameters parameters) {
+				foreach (TypeDef type in parameters.Targets.OfType<TypeDef>()) {
+					if (type.InGlobalModuleType()) continue;
+					foreach (MethodDef method in type.Methods) {
+						if (method.InGlobalModuleType()) continue;
+						if (method.FullName.Contains("My.")) continue;
+
+						switch (mode) {
+							case CalliMode.Normal: {
+									if (method.Equals(calliMethod)) continue;
+									if (!method.HasBody) continue;
+									if (!method.Body.HasInstructions) continue;
+									for (int i = 0; i < method.Body.Instructions.Count; i++) {
+										if (method.Body.Instructions[i].OpCode == OpCodes.Call || method.Body.Instructions[i].OpCode == OpCodes.Callvirt) {
+											try {
+												MemberRef membertocalli = (MemberRef)method.Body.Instructions[i].Operand;
+												method.Body.Instructions[i].OpCode = OpCodes.Calli;
+												method.Body.Instructions[i].Operand = membertocalli.MethodSig;
+												
+												method.Body.Instructions.Insert(i, Instruction.Create(OpCodes.Call, calliMethod));
+												method.Body.Instructions.Insert(i, Instruction.Create(OpCodes.Ldc_I8, (long)membertocalli.MDToken.ToInt32()));
+											}
+											catch { }
+										}
+									}
+									break;
+								}
+							case CalliMode.Ldftn: {
+									if (!method.HasBody) continue;
+									if (!method.Body.HasInstructions) continue;
+									for (int i = 0; i < method.Body.Instructions.Count; i++) {
+										if (method.Body.Instructions[i].OpCode == OpCodes.Call || method.Body.Instructions[i].OpCode == OpCodes.Callvirt) {
+											try {
+												MemberRef membertocalli = (MemberRef)method.Body.Instructions[i].Operand;
+												method.Body.Instructions[i].OpCode = OpCodes.Calli;
+												method.Body.Instructions[i].Operand = membertocalli.MethodSig;
+												method.Body.Instructions.Insert(i, Instruction.Create(OpCodes.Ldftn, membertocalli));
+											}
+											catch { }
+										}
+									}
+									break;
+								}
+						}
+					}
+				}
+			}
+		}
+
+		enum CalliMode {
+			Normal,
+			Ldftn
+		}
+	}
 }
