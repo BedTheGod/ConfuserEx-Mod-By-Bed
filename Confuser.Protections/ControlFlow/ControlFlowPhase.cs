@@ -28,11 +28,11 @@ namespace Confuser.Protections.ControlFlow {
 		CFContext ParseParameters(MethodDef method, ConfuserContext context, ProtectionParameters parameters, RandomGenerator random, bool disableOpti) {
 			var ret = new CFContext();
 			ret.Type = parameters.GetParameter(context, method, "type", CFType.Switch);
-			ret.Predicate = parameters.GetParameter(context, method, "predicate", PredicateType.Normal);
+			ret.Predicate = parameters.GetParameter(context, method, "predicate", PredicateType.x86);
 
-			int rawIntensity = parameters.GetParameter(context, method, "intensity", 1);
-			ret.Intensity = rawIntensity / 1.0;
-			ret.Depth = parameters.GetParameter(context, method, "depth", 1);
+			int rawIntensity = parameters.GetParameter(context, method, "intensity", 60);
+			ret.Intensity = rawIntensity / 100.0;
+			ret.Depth = parameters.GetParameter(context, method, "depth", 4);
 
 			ret.JunkCode = parameters.GetParameter(context, method, "junk", false) && !disableOpti;
 
