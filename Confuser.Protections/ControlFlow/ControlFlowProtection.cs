@@ -42,9 +42,7 @@ namespace Confuser.Protections {
 		}
 
 		protected override void PopulatePipeline(ProtectionPipeline pipeline) {
-          //  pipeline.InsertPreStage(PipelineStage.OptimizeMethods, new ControlFlowPhase(this));
-            //pipeline.InsertPreStage(PipelineStage.OptimizeMethods, new ControlFlowPhase2(this));
-            pipeline.InsertPreStage(PipelineStage.OptimizeMethods, new ControlFlowNewPhase(this));
-        }
+			pipeline.InsertPreStage(PipelineStage.OptimizeMethods, new ControlFlowPhase(this));
+		}
 	}
 }

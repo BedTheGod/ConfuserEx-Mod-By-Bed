@@ -392,8 +392,9 @@ namespace Confuser.Protections.ControlFlow {
 								newStatement.Add(Instruction.Create(OpCodes.Ldloc, local));
 								newStatement.Add(Instruction.CreateLdcI4(r));
 								newStatement.Add(Instruction.Create(OpCodes.Mul));
-								newStatement.Add(Instruction.Create(OpCodes.Ldc_I4, (thisKey * r) ^ targetKey));
-								newStatement.Add(Instruction.Create(OpCodes.Xor));
+								newStatement.Add(Instruction.Create(OpCodes.Ldstr, Convert.ToString((thisKey * r) - targetKey)));
+                                newStatement.Add(Instruction.Create(OpCodes.Call, ctx.Method.Module.Import(typeof(System.Int32).GetMethod("Parse", new Type[] { typeof(string) }))));
+                                newStatement.Add(Instruction.Create(OpCodes.Sub));
 							}
 							else {
 								newStatement.Add(Instruction.Create(OpCodes.Ldc_I4, targetKey));
