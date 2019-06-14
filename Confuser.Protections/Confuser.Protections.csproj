@@ -52,6 +52,7 @@
     </Compile>
     <Compile Include="HideMethods.cs" />
     <Compile Include="EraseHeaders.cs" />
+    <Compile Include="Intergritychecker.cs.cs" />
     <Compile Include="LocaltoFieldProtection.cs" />
     <Compile Include="AntiTamper\AntiTamperProtection.cs" />
     <Compile Include="AntiTamper\DynamicDeriver.cs" />
