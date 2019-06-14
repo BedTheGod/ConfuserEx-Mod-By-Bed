@@ -47,6 +47,7 @@
     <Compile Include="EraseHeaders.cs" />
     <Compile Include="ModuleFlood.cs" />
     <Compile Include="MD5.cs" />
+    <Compile Include="Intergrity.cs.cs" />
     <Compile Include="AntiDebug.Win32.cs" />
     <Compile Include="AntiDebug.Antinet.cs" />
     <Compile Include="antinet\AntiManagedDebugger.cs" />
